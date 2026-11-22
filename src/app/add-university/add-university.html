@@ -1,0 +1,70 @@
+
+<div class="container">
+<h2>Ajouter une université</h2>
+
+<form (ngSubmit)="addUniversite()">
+
+  <label>Nom université :</label>
+  <input
+    type="text"
+    name="nomuniversite"
+    [(ngModel)]="newUniversite.nomuniversite"
+    required
+  >
+
+  <br><br>
+
+  <label>Ville :</label>
+  <input
+    type="text"
+    name="villeuniversite"
+    [(ngModel)]="newUniversite.villeuniversite"
+    required
+  >
+
+  <br><br>
+
+  <label>Nombre étudiants :</label>
+  <input
+    type="number"
+    name="nombre_etudiants"
+    [(ngModel)]="newUniversite.nombre_etudiants"
+    required
+  >
+
+  <br><br>
+
+  <label>Date création :</label>
+  <input
+    type="date"
+    name="dateCreation"
+    [(ngModel)]="newUniversite.dateCreation"
+    required
+  >
+
+  <br><br>
+
+  <label>Classification :</label>
+
+  <select
+    name="classification"
+    [(ngModel)]="newUniversite.classification"
+    required
+  >
+    <option [ngValue]="null">Choisir une classification</option>
+
+    <option
+      *ngFor="let clas of classifications"
+      [ngValue]="clas"
+    >
+      {{ clas.idClassification }}
+    </option>
+
+  </select>
+
+  <br><br>
+
+  <button type="submit">Ajouter</button>
+
+</form>
+</div>
