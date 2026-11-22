@@ -1,7 +1,7 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, tap, map } from 'rxjs';
+import { Observable} from 'rxjs';
 
 import { universite } from '../model/universite.model';
 import { Classification } from '../model/classification.model';
@@ -63,14 +63,9 @@ export class UniversiteService {
   }
 
   // 6. Afficher les classifications
-  listeClassifications(): Observable<Classification[]> {
-    return this.http.get<ClassificationWrapped>(
-      this.apiURLClas
-    ).pipe(
-      map(data => data._embedded.classifications),
-      tap(data => this.classifications = data)
-    );
-  }
+listeClassifications(): Observable<ClassificationWrapped> {
+  return this.http.get<ClassificationWrapped>(this.apiURLClas);
+}
 
   // 7. Consulter une classification par ID
   consulterClassification(id: number): Classification | undefined {

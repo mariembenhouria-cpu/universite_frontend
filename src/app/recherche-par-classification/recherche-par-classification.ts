@@ -26,7 +26,7 @@ export class RechercheParClassification implements OnInit {
     this.universiteservice.listeClassifications()
       .subscribe({
         next: (data) => {
-          this.classifications = data;
+          this.classifications = data._embedded.classifications;
           console.log(this.classifications);
         },
         error: (err) => {
@@ -60,9 +60,7 @@ export class RechercheParClassification implements OnInit {
 
       this.universiteservice.supprimerUniversite(universite.iduniversite)
         .subscribe(() => {
-
           this.onChange();
-
         });
     }
   }

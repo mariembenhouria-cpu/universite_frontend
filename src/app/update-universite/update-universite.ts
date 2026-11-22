@@ -1,8 +1,9 @@
 
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { forkJoin } from 'rxjs';
 
 import { universite } from '../model/universite.model';
 import { Classification } from '../model/classification.model';
@@ -11,7 +12,7 @@ import { UniversiteService } from '../services/universite.service';
 @Component({
   selector: 'app-update-universite',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, DatePipe],
   templateUrl: './update-universite.html'
 })
 export class UpdateUniversiteComponent implements OnInit {
@@ -28,48 +29,71 @@ export class UpdateUniversiteComponent implements OnInit {
   constructor(
     private universiteService: UniversiteService,
     private activatedRoute: ActivatedRoute,
-    public router: Router
+    public router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
 
     const id = Number(this.activatedRoute.snapshot.params['id']);
 
-    // Charger les classifications
-    this.universiteService.listeClassifications()
-      .subscribe({
-        next: (data) => {
-          this.classifications = data;
-        },
-        error: (err) => {
-          console.error(err);
-          this.erreur = 'Erreur lors du chargement des classifications.';
-        }
-      });
+    console.log('ID reçu :', id);
 
-    // Charger l'université par son ID
-    this.universiteService.consulterUniversite(id)
-      .subscribe({
-        next: (data) => {
+    if (!id || isNaN(id)) {
+      this.erreur = 'ID université invalide.';
+      this.loading = false;
+      this.cdr.detectChanges();
+      return;
+    }
 
-          this.currentUniversite = data;
+    forkJoin({
 
-          this.selectedClassificationId =
-            data.classification?.idClassification ?? null;
+      universite: this.universiteService.consulterUniversite(id),
 
-          this.loading = false;
+      classifications: this.universiteService.listeClassifications()
 
-        },
-        error: (err) => {
-          console.error(err);
-          this.erreur = 'Impossible de charger cette université.';
-          this.loading = false;
-        }
-      });
+    }).subscribe({
+
+      next: (data) => {
+
+        console.log('Université reçue :', data.universite);
+        console.log('Classifications reçues :', data.classifications);
+
+        this.currentUniversite = data.universite;
+
+        this.selectedClassificationId =
+          data.universite.classification?.idClassification ?? null;
+
+        this.classifications =
+          data.classifications._embedded.classifications;
+
+        this.loading = false;
+
+        console.log('Loading :', this.loading);
+        console.log('Université :', this.currentUniversite);
+
+        this.cdr.detectChanges();
+
+      },
+
+      error: (err) => {
+
+        console.error('Erreur chargement :', err);
+
+        this.erreur = 'Impossible de charger les informations.';
+        this.loading = false;
+
+        this.cdr.detectChanges();
+
+      }
+
+    });
 
   }
 
   updateUniversite(): void {
+
+    this.erreur = '';
 
     const classification = this.classifications.find(
       clas => clas.idClassification == this.selectedClassificationId
@@ -86,13 +110,19 @@ export class UpdateUniversiteComponent implements OnInit {
       .subscribe({
 
         next: (data) => {
-          console.log('Université modifiée avec succès', data);
+
+          console.log('Université modifiée avec succès :', data);
+
           this.router.navigate(['/universities']);
+
         },
 
         error: (err) => {
+
           console.error('Erreur modification :', err);
+
           this.erreur = 'Erreur lors de la modification de l’université.';
+
         }
 
       });

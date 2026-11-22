@@ -30,7 +30,7 @@ export class ListeClassifications implements OnInit {
   chargerClassifications(): void {
     this.universiteService.listeClassifications().subscribe({
       next: (data) => {
-        this.classifications = data;
+        this.classifications = data._embedded.classifications;
         console.log(this.classifications);
       },
       error: (err) => {

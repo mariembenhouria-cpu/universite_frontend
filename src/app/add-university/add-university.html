@@ -1,70 +1,92 @@
 
 <div class="container">
-<h2>Ajouter une université</h2>
+  <h2>Ajouter une université :</h2>
 
-<form (ngSubmit)="addUniversite()">
+  <form>
+    <!--<div class="col-sm-2 col-md-2 col-lg-2">
+      <label>ID Université</label>
+      <input
+        type="number"
+        [(ngModel)]="newUniversite.iduniversite"
+        name="iduniversite"
+        class="form-control">
+    </div>-->
 
-  <label>Nom université :</label>
-  <input
-    type="text"
-    name="nomuniversite"
-    [(ngModel)]="newUniversite.nomuniversite"
-    required
-  >
+    <div class="col-sm-4 col-md-4 col-lg-4">
+      <label>Nom Université</label>
+      <input
+        type="text"
+        [(ngModel)]="newUniversite.nomuniversite"
+        name="nomuniversite"
+        class="form-control">
+    </div>
 
-  <br><br>
+    <div class="col-sm-4 col-md-4 col-lg-4">
+      <label>Ville université</label>
+      <select
+        [(ngModel)]="newUniversite.villeuniversite"
+        name="villeuniversite"
+        class="form-control">
 
-  <label>Ville :</label>
-  <input
-    type="text"
-    name="villeuniversite"
-    [(ngModel)]="newUniversite.villeuniversite"
-    required
-  >
+        <option value="Tunis">Tunis</option>
+        <option value="Sousse">Sousse</option>
+        <option value="Sfax">Sfax</option>
+        <option value="Nabeul">Nabeul</option>
+      </select>
+    </div>
 
-  <br><br>
+    <div class="col-sm-4 col-md-4 col-lg-4">
+      <label>Nombre des étudiants</label>
+      <input
+        type="number"
+        [(ngModel)]="newUniversite.nombre_etudiants"
+        name="nombre_etudiants"
+        class="form-control">
+    </div>
 
-  <label>Nombre étudiants :</label>
-  <input
-    type="number"
-    name="nombre_etudiants"
-    [(ngModel)]="newUniversite.nombre_etudiants"
-    required
-  >
+    <div class="col-sm-4 col-md-4 col-lg-4">
+      <label>Date de Création</label>
+      <input
+        type="date"
+        [(ngModel)]="newUniversite.dateCreation"
+        name="dateCreation"
+        class="form-control">
+    </div>
 
-  <br><br>
+    <div class="col-sm-4 col-md-4 col-lg-4 mt-2">
+      <label>Classification</label>
 
-  <label>Date création :</label>
-  <input
-    type="date"
-    name="dateCreation"
-    [(ngModel)]="newUniversite.dateCreation"
-    required
-  >
+      <select
+        class="form-control"
+        name="idClassification"
+        [(ngModel)]="newIdclassification">
 
-  <br><br>
+        <option [ngValue]="null" disabled>
+          Choisir une classification
+        </option>
 
-  <label>Classification :</label>
+        @for (c of classifications; track c.idClassification) {
+          <option [ngValue]="c.idClassification">
+            {{ c.nomClassification }}
+          </option>
+        }
 
-  <select
-    name="classification"
-    [(ngModel)]="newUniversite.classification"
-    required
-  >
-    <option [ngValue]="null">Choisir une classification</option>
+      </select>
+    </div>
 
-    <option
-      *ngFor="let clas of classifications"
-      [ngValue]="clas"
-    >
-      {{ clas.idClassification }}
-    </option>
+    <div class="mt-2">
+      <button
+        type="button"
+        (click)="addUniversite()"
+        class="btn btn-success">
+        Ajouter
+      </button>
+    </div>
 
-  </select>
+    <div class="mt-2">
+      <h3>{{ message }}</h3>
+      <p class="text-danger">{{ errorMessage }}</p>
+    </div>
 
-  <br><br>
-
-  <button type="submit">Ajouter</button>
-
-</form>
+  </form>
 </div>
